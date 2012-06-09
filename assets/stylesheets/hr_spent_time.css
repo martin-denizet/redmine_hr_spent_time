@@ -1,0 +1,131 @@
+/* 
+    Document   : worktime
+    Created on : May 28, 2011, 8:51:22 AM
+    Author     : martin
+    Description:
+        WorkTime page style.
+*/
+
+root { 
+    display: block;
+}
+
+table#wt_calendar{
+    border:0;
+    border-collapse:collapse;
+    /*    width: 100%;*/
+}
+table#wt_calendar td{
+    font-size:0.8em;
+    width: 22px;
+}
+.wt_calendar{
+    background: #f00;
+}
+/*td.wt_calendar-cell{
+    background-color: #0c0;
+    width: 22px;
+    font-size:1.0em;
+}*/
+tr.wt_calendar-row-even{
+    background-color: #EAF7FB;
+}
+tr.wt_calendar-row-odd{
+    background-color: #FFF;
+}
+
+td.wt_calendar-issues-column{
+    width: auto !important;
+    font-size:1.2em;
+}
+th.wt_calendar-issues-column{
+    width: auto !important;
+    font-size:1.5em !important;
+}
+
+tr.wt_calendar-row-project{
+    background-color: #C9EAF3;
+    color: #333;
+    /*    font-size:1.0em;*/
+    font-weight: bold;
+}
+
+
+.wt_calendar-row-total{
+    border-bottom: 1px solid #ccc;
+    border-top: 1px solid #ccc;
+    font-weight: bold;
+}
+
+.wt_calendar-col-total{
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    font-style: normal;
+}
+
+.wt_calendar-row-days{
+    background-color: #eee;
+}
+
+tr.wt_calendar-row-wdays{
+    font-style: italic;
+}
+
+
+.wt_calendar-selected-day{
+    background-color: #cfc !important;
+    border-left: 2px solid #090 !important;
+    border-right: 2px solid #090 !important;
+}
+th.wt_calendar-selected-day{
+    border-top: 2px solid #090;
+}
+.wt_calendar-holiday{
+    background-color: #fbc;
+    background-image: url('/plugin_assets/redmine_hr/images/stripes.png');
+    background-repeat: repeat;
+}
+.wt_calendar-saturday{
+    background-image: url('/plugin_assets/redmine_hr/images/stripes.png');
+    background-repeat: repeat;
+    background-color: #D0BCFE;
+    border-left: 1px solid #9669FE;
+    border-right: 1px solid #9669FE;
+}
+.wt_calendar-sunday{
+    background-image: url('/plugin_assets/redmine_hr/images/stripes.png');
+    background-repeat: repeat;
+    background-color: #B89AFE;
+    border-left: 1px solid #9669FE;
+    border-right: 1px solid #9669FE;
+}
+
+#time_input_table{
+    white-space: nowrap; 
+}
+#time_input_table td.worked{
+    background-color: #cfc;
+}
+#time_input_table td.not-worked{
+    background-color: #fff;
+}
+
+tr.wt_daily_sum{
+    background-color: #ccc;
+}
+tr.wt_daily_report_project{
+    background-color: #333;
+    color: #fff;
+}
+tr.wt_daily_report_header{
+    border: 1px;
+}
+tr.wt_time_entry_line_even{
+    background-color: #EAF7FB;
+}
+tr.wt_time_entry_line_odd{
+    background-color: #C9EAF3;
+}
+tr.wt_daily_report_new_issue{
+    background-color: #ddf;
+}

@@ -1,0 +1,60 @@
+<%
+
+time_entry=TimeEntry.new() if time_entry.nil?
+new_lines_count=0 if new_lines_count.nil?
+
+form_prefix=""
+if time_entry.new_record? then
+  form_prefix="new_time_entry["+issue.id.to_s+"]["+new_lines_count.to_s+"]"
+else
+  form_prefix="time_entry["+time_entry.id.to_s+"]"
+end
+
+if issue.nil? || !issue.visible? then
+  issueHtml = "<del>Issue:"+issue.to_s+"</del>"
+elsif issue.closed?
+  issueHtml = "<del>"+issue.to_s+"</del>"
+else
+  issueHtml = issue.to_s
+end
+
+@issue_position_max=1 if @issue_position_max.nil?
+
+dup_issue="JavaScript:dup_issue('"+url_for(@link_params.merge(:action=>"ajax_insert_daily"))+"',
+'"+form_prefix+"',
+"+issue.id.to_s+")"
+
+%>
+<!-- Entries existing for this issue -->
+<tr id="<%= form_prefix %>" class="<%= issue_line_class%>">
+  <td>
+    <a onclick="JavaScript:showModalDialog('<%=url_for(:controller=>"issues", :action=>"show", :id=>issue.id)%>', window, '');" href="#">
+      <%= issueHtml%>
+    </a>
+
+    <%= print_issue_cost(issue) %>
+    <a name="<%='done_ratio'+issue.id.to_s%>"
+       href="JavaScript:update_done_ratio(
+       '<%=url_for(@link_params.merge(:action=>"popup_update_done_ratio"))%>',
+       '<%=url_for(@link_params.merge(:action=>"ajax_update_done_ratio"))%>',
+       <%=issue.id%>);">
+      [<%=issue.done_ratio%>&#37;]
+    </a>
+  </td>
+  <td>
+    <a href="<%=dup_issue%>;"><%= image_tag '../images/table_multiple.png', :alt => l(:label_duplicate), :title => l(:label_duplicate)%> </a>
+<%# This checks if the owner of the entry is the current user %>
+    <% if @this_uid==@crnt_uid && issue_position>0 then %>
+      <a href="<%=url_for(@link_params.merge(:issue_del=>issue.id))%>"><%= image_tag '../images/delete.png', :alt => l(:label_delete), :title => l(:label_delete)%></a>
+    <% end %>
+  </td>
+  <td>
+    <%= text_field_tag(form_prefix+"[hours]", time_entry.hours, :size=>5) %>
+  </td>
+  <td>
+    <%= select_tag form_prefix+"[activity_id]", options_for_select(activities, time_entry.activity_id), :required => true %>
+  </td>
+  <td>
+    <%= text_field_tag(form_prefix+"[comments]", time_entry.comments, :size=>80)%>
+  </td>
+</tr>

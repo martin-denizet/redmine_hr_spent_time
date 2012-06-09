@@ -1,0 +1,83 @@
+<html>
+  <head>
+    <title>select issues</title>
+    <%= stylesheet_link_tag 'application' %>
+
+    <%=javascript_include_tag "prototype" %>
+    <script type="text/javascript">
+      <!--
+      function issue_inputed()
+      {
+        var vals = document.forms[0].elements[0].value;
+        var issues = vals.split(',');
+        var issue_ids = new Array;
+        while((val=issues.shift())) {
+          issue_ids.push(val);
+        }
+        returnValue=issue_ids;
+        close();
+      }
+
+      function issue_selected(issue_id)
+      {
+        returnValue = [issue_id];
+        close();
+      }
+
+      function issues_selected()
+      {
+        var issue_ids = new Array;
+        for(i=0; e = document.forms[0].elements[i]; i++) {
+          if(e.checked)
+            issue_ids.push(e.value);
+        }
+        returnValue = issue_ids;
+        close();
+      }
+
+      function checkKey(e)
+      {
+        if (!e) var e = window.event;
+        if(e.keyCode == 13) {
+          issue_inputed();
+          return false;
+        }
+        else
+          return e;
+      }
+      -->
+    </script>
+  </head>
+
+  <body onLoad="document.forms[0].elements[0].focus();">
+    <%=l(:wt_select_issues_by_project)%>
+
+    <select onchange="if (this.value != '') {new Ajax.Updater('issues', this.value, {asynchronous:true, method:'get'}); return false;}">
+      <option value=''><%=l(:wt_select_project)%></option>
+      <option disabled="disabled">---</option>
+      <%
+      projects = Project.find(:all, :order=>"name");
+      projects.each do |prj|
+        next unless prj.active?;
+        next if !User.current.allowed_to?(:log_time, prj)
+        members = Member.find(:all, :conditions=>
+            ["user_id=:u and project_id=:p",{:u=>User.current.id, :p=>prj.id}]);
+        next if members.size==0;
+      %>
+        <option value="<%= url_for(:action=>"ajax_select_issues", :prj=>prj.id) %>">
+          <%= prj.name %>
+        </option>
+      <%
+      end
+    %>
+    </select>
+    <br/>
+    <div id="issues">
+      <%=l(:wt_input_issue_numbers)%>
+      <form action="">
+        <input type="text" size=32 onKeyPress="return checkKey(event);"/>
+        <input type="button" value="<%=l(:button_add)%>" onclick="issue_inputed();"/>
+      </form>
+    </div>
+  </body>
+</html>

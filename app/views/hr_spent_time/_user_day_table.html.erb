@@ -1,0 +1,74 @@
+<table id="time_input_table">
+  <tr class="wt_daily_report_header">
+    <th colspan="2">
+      <div style="position:relative;height:25px;">
+        <div style="top:3px;left:20px;width:200px;font-size:1.5em;">
+          <%= @this_year %>/<%= @month_names[@this_month-1]%>/<%=@this_day%><br/>
+        </div>
+      </div>
+    </th>
+    <th><%=l(:hr_spent_time)%></th>
+    <th><%=l(:field_activity)%></th>
+    <th><%=l(:field_comments)%></th>
+    <% @custom_fields.each do |cf| %>
+      <td><%= cf.name %></td>
+    <% end %>
+  </tr>
+  <%
+  @day_pack[:position_prjs].each do |prj_pack|
+    next if prj_pack[:ref_issues].length==0
+    prj = prj_pack[:prj]
+    dsp_prj = prj.id
+    dsp_pos = prj_pack[:position]
+
+    next if !User.current.allowed_to?(:log_time, prj)
+
+    activities = []
+    prj.activities.each do |act|
+      activities.push([act.name, act.id])
+    end
+  %>
+    <tr class="wt_daily_report_project">
+      <td>
+        <%=prj.name%>
+      </td>
+      <td>&nbsp;</td>
+      <td><%=sprintf("%1.1f", prj_pack[:total])%></td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <% @custom_fields.each do |cf| %>
+        <td>&nbsp;</td>
+      <% end %>
+    </tr>
+    <%
+    prj_pack[:position_issues].each do |issue_pack|
+      issue = issue_pack[:issue]
+      issue_id = issue.id
+      issue_position = issue_pack[:position].to_i
+      issue_line_class=issue_pack[:worked] ? "worked" : "not-worked"
+      issue = Issue.find_by_id(issue_id)
+
+
+      if issue_pack[:each_entries].length==0 then %>
+        <%= render :partial=>'inline_time_entry_form', :locals=>{:issue=>issue,:issue_position=>issue_position,:issue_line_class=>issue_line_class,:activities=>activities,:time_entry=>TimeEntry.new()}%>
+      <% else
+        issue_pack[:each_entries].each do |hour_id, time_entry|
+      %>
+
+          <%=render :partial=>'inline_time_entry_form', :locals=>{:issue=>issue,:issue_position=>issue_position,:issue_line_class=>issue_line_class+" "+cycle('wt_time_entry_line_even','wt_time_entry_line_even'),:activities=>activities,:time_entry=>time_entry}%>
+       <% end
+      end
+    end
+  end
+%>
+  <tr align="center" id="time_input_table_bottom" class="wt_daily_sum">
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td><%=sprintf("%1.1f", @day_pack[:total])%></td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <% @custom_fields.each do |cf| %>
+      <td>&nbsp;</td>
+    <% end %>
+  </tr>
+</table>

@@ -1,0 +1,13 @@
+= Redmine HR Spent time plugin
+
+Based on WorkTime plugin by Tomohisa Kusukawa
+
+* Not ready for production, more refactoring to come! *
+
+= Credit
+
+Time input feature copied from Tomohisa Kusukawa's WorkTime plugin: http://code.google.com/p/kusu/wiki/WorkTime under GPLv2 license
+I copied it because I needed to extend it and integrate it to HR features.
+(WorkTime 0.1.0[r216])
+
+= Known Issues

@@ -1,0 +1,5 @@
+<%if @add_issue then%>
+  <%=render :partial=>'inline_time_entry_form',
+    :locals=>{:issue=>@add_issue,:issue_position=>-1,:issue_line_class=>'wt_daily_report_new_issue',:activities=>@activities,:new_lines_count=>@count,:time_entry=>nil}
+    %>
+<%end%>

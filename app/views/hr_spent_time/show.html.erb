@@ -1,0 +1,106 @@
+<% content_for :header_tags do %>
+  <%= stylesheet_link_tag 'hr_spent_time', :plugin => 'redmine_hr_spent_time' %>
+  <%=javascript_include_tag "hr_spent_time", :plugin=>'redmine_hr_spent_time' %>
+  <%=javascript_include_tag "prototype" %>
+  <script type="text/javascript">
+    <!--
+    var add_issue_count = 1;
+    function add_issue(pop_url, ajax_url)
+    {
+      var issues = showModalDialog(pop_url, window, "dialogWidth:600px;dialogHeight:480px");
+      while((id = issues.shift())) {
+        new Ajax.Updater('time_input_table_bottom', ajax_url+"&add_issue="+id+"&count="+add_issue_count, {insertion:Insertion.Before, method:'get'});
+        add_issue_count ++;
+      }
+    }
+
+    function dup_issue(ajax_url, insert_pos, id)
+    {
+      new Ajax.Updater( insert_pos, ajax_url+"&add_issue="+id+"&count="+add_issue_count, {insertion:Insertion.After, method:'get'});
+      add_issue_count ++;
+    }
+    -->
+  </script>
+<% end %>
+
+<%= @message %>
+
+<h2><%=l(:wt_monthly_report)%> (<%=User.find_by_id(@this_uid)%>)</h2>
+<%= render :partial=>'user_month_table' %>
+
+<br/>
+
+<h2>
+  <%=l(:wt_daily_report)%>
+</h2>
+<% form_tag :action => @link_params[:action] do %>
+  <%= hidden_field_tag('year', @this_year) %>
+  <%= hidden_field_tag('month', @this_month) %>
+  <%= hidden_field_tag('day', @this_day) %>
+  <%= hidden_field_tag('user', @this_uid) %>
+  <%= hidden_field_tag('prj', @restrict_project) %>
+
+  <%= render :partial=>'user_day_table' %>
+
+  <%if @this_uid==@crnt_uid then%>
+    [<a href="JavaScript:add_issue('<%=url_for(:action=>"popup_select_issues")%>',
+        '<%=url_for(@link_params.merge(:action=>"ajax_insert_daily"))%>');"
+        >
+          <%=l(:wt_add_issue)%>
+    </a>]
+    [<%= link_to(l(:wt_hide_closed_issues), @link_params.merge(:issue_del=>"closed")) %>]
+    <%= submit_tag l(:wt_update) %>
+    <br/>
+  <%end%>
+
+  <br/>
+  <h2>
+    <%= @this_year %>/<%= @this_month%>/<%=@this_day%> (<%=@wday_name[@this_date.wday]%>)
+    <%=User.find_by_id(@this_uid)%>
+  </h2>
+  <div id="memo">
+
+
+  <%#------------------------------------------- Wiki表示#%>
+    <%
+    memo=StDailyMemo.find(:first, :conditions=>["day=:d and user_id=:u",{:d=>@this_date,:u=>@this_uid}])
+    if memo then # この日のメモがある場合
+      %>
+      <div class="wiki" style="background:#ffb;">
+        <%=textilizable(memo.description) %>
+        <div style="text-align:right;">
+          (update:<%=memo.updated_on.strftime("%y/%m/%d %H:%M")%>)
+        </div>
+      </div>
+    <%end%>
+
+    <%
+    memo=StDailyMemo.find(:first, :order=>"day DESC", :conditions=>["day<:d and user_id=:u",{:d=>@this_date,:u=>@this_uid}])
+    if memo then
+      d = memo.day
+    %>
+      [<%=link_to(l(:wt_pre_memo), @link_params.merge(:anchor=>"memo", :day=>d.day, :month=>d.month, :year=>d.year))%>]
+    <%end%>
+
+    <%if @this_uid==@crnt_uid then%>
+      [<a href="#" onclick="JavaScript:new Ajax.Updater('memo',
+        '<%=url_for(@link_params.merge(:action=>"ajax_memo_edit"))%>',
+        {asynchronous:true, method:'get'}); return false;">
+            <%=l(:wt_edit_memo)%>
+      </a>]
+    <%end%>
+
+    <%
+    memo=StDailyMemo.find(:first, :order=>"day", :conditions=>["day>:d and user_id=:u",{:d=>@this_date,:u=>@this_uid}])
+    if memo then
+      d = memo.day
+    %>
+      [<%= link_to(l(:wt_next_memo), @link_params.merge(:anchor=>"memo", :day=>d.day, :month=>d.month, :year=>d.year))%>]
+    <%end%>
+    <br/>
+
+    <%= render :partial=>'select_user', :locals=>{:link_params=>@link_params.merge(:anchor=>"memo")} %>
+
+  </div>
+<%end%>
+

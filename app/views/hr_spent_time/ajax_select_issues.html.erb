@@ -1,0 +1,29 @@
+<form style="font-size:14px;" action="">
+<%
+issues = Issue.find(:all, :order=>"id DESC", :conditions =>
+                     ["project_id=:p",{:p=>params[:prj]}])
+issues.each do |issue|
+  next if !issue.visible?
+  if issue.closed? then
+    next if !params.key?(:all);
+    issueHtml = "<del>"+issue.to_s+"</del>";
+  else
+    issueHtml = issue.to_s;
+  end
+%>
+<input type="checkbox" name="selected"  value="<%=issue.id%>"/>
+<input type="button" onclick="JavaScript:issue_selected('<%=issue.id%>');" value="<%=l(:button_add)%>" />
+<%=issueHtml%>
+<a onclick="JavaScript:showModalDialog('<%=url_for(:controller=>"issues", :action=>"show", :id=>issue.id)%>', window, '');" href="#">
+  ？
+</a>
+<br/>
+<%end%>
+</form>
+<input type="button" onclick="JavaScript:issues_selected();" value="<%=l(:wt_add_checked)%>"/>
+
+<%if !params.key?(:all) then
+    url=url_for(:action=>'ajax_select_issues', :prj=>params[:prj], :all=>'');%>
+  <br/>
+  <a onclick="new Ajax.Updater('issues', '<%=url%>', {asynchronous:true, method:'get'}); return false;" href="#">[display closed issue]</a>
+<%end%>

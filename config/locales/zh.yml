@@ -1,0 +1,15 @@
+# Chinese strings go here for Rails i18n
+zh:
+  label_position_plural: "职位"
+  label_position: "职位"
+  label_position_new: "新职位"
+  label_hr: "人力资源"
+  label_organization_chart: "组织机构图"
+  label_nobody: "没人"
+  field_manager: "经理"
+  managed_by: "被管理者"
+  label_user_details: "用户信息"
+  label_contact_list: "联系方式"
+  label_avatar: "头像"
+  label_confidential_information: "保密信息"
+  label_employees_information: "员工信息"

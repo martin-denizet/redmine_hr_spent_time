@@ -1,0 +1,15 @@
+# French strings go here for Rails i18n
+fr:
+  label_position_plural: "Postes"
+  label_position: "Poste"
+  label_position_new: "Nouveau Poste"
+  label_hr: "RH"
+  label_organization_chart: "Organigramme"
+  label_nobody: "Personne"
+  field_manager: "Manager"
+  managed_by: "Managé par"
+  label_user_details: "Détails Utilisateur"
+  label_contact_list: "Carnet d'adresse"
+  label_avatar: "Avatar"
+  label_confidential_information: "Information Confidentielle"
+  label_employees_information: "Informations Employés"
