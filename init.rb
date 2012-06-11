@@ -14,9 +14,9 @@ Redmine::Plugin.register :redmine_time_report do
   project_module :worktime do
     
     permission :view_hr_spent_time_tab, {:hr_spent_time =>
-        [:show,:total,:edit_relay,:relay_total,:relay_total2,:popup_select_issue,:ajax_select_issue,:popup_select_issues,:ajax_select_issues,:ajax_insert_daily,:ajax_memo_edit,:ajax_relay_table]}
-    permission :edit_hr_spent_time_total, {}
-    permission :view_hr_spent_time_other_member, {}
+        [:index,:show,:total,:edit_relay,:relay_total,:relay_total2,:popup_select_issue,:ajax_select_issue,:popup_select_issues,:ajax_select_issues,:ajax_insert_daily,:ajax_memo_edit,:ajax_relay_table]}
+    #permission :edit_hr_spent_time_total, {}
+    #permission :view_hr_spent_time_other_member, {}
   end
 
 
